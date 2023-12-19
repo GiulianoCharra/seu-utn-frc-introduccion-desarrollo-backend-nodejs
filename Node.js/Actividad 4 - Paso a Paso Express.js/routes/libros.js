@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const libros = require("../data");
 const Joi = require("joi");
+
 const libroSchema = Joi.object({
   titulo: Joi.string().required().label("Título"),
   autor: Joi.string().required().label("Autor"),
@@ -20,7 +21,7 @@ router.get("/", (req, res, next) => {
 router.get("/:id", (req, res, next) => {
   try {
     const id = req.params.id;
-    const libro = libros.find((l) => l.id === id);
+    const libro = libros.find((l) => l.id == id);
     if (!libro) {
       const error = new Error("Libro no encontrado");
       error.status = 404;
