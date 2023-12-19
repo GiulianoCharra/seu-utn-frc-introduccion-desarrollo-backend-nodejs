@@ -1,27 +1,21 @@
-const express = require("express");
-const router = express.Router();
-const libros = require("../data");
-const Joi = require("joi");
+const libros = require("../../data");
+const libroSchema = require("../schemas/libro.schema");
 
-const libroSchema = Joi.object({
-  titulo: Joi.string().required().label("Título"),
-  autor: Joi.string().required().label("Autor"),
-});
 
 // Obtener todos los libros
-router.get("/", (req, res, next) => {
+function getAllBook(req, res, next) {
   try {
     res.json(libros);
   } catch (err) {
     next(err);
   }
-});
+}
 
 // Obtener un libro por ID
-router.get("/:id", (req, res, next) => {
+function getBookById(req, res, next) {
   try {
-    const id = req.params.id;
-    const libro = libros.find((l) => l.id == id);
+    const id = parseInt(req.params.id);
+    const libro = libros.find((l) => l.id === id);
     if (!libro) {
       const error = new Error("Libro no encontrado");
       error.status = 404;
@@ -31,10 +25,10 @@ router.get("/:id", (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+}
 
 // Crear un nuevo libro
-router.post("/", (req, res, next) => {
+function createBook(req, res, next) {
   try {
     const { error, value } = libroSchema.validate(req.body);
     if (error) {
@@ -54,12 +48,12 @@ router.post("/", (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+}
 
 // Actualizar un libro existente
-router.put("/:id", (req, res, next) => {
+function updateBook(req, res, next) {
   try {
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
     const { error, value } = libroSchema.validate(req.body);
     if (error) {
       const validationError = new Error("Error de validación");
@@ -80,12 +74,12 @@ router.put("/:id", (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+}
 
 // Eliminar un libro
-router.delete("/:id", (req, res, next) => {
+function deleteBook(req, res, next) {
   try {
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
     const index = libros.findIndex((l) => l.id === id);
     if (index === -1) {
       const error = new Error("Libro no encontrado");
@@ -97,5 +91,11 @@ router.delete("/:id", (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
-module.exports = router;
+}
+module.exports = {
+  getAllBook,
+  getBookById,
+  createBook,
+  updateBook,
+  deleteBook,
+};
