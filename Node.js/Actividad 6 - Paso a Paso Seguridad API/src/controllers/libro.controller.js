@@ -13,12 +13,10 @@ async function getAllBook(req, res, next) {
 // Obtener un libro por ID
 async function getBookById(req, res, next) {
   try {
-    const libro = await Libro.findById(req.params.id, req.body, {
-      new: true,
-    });
+    const libro = await Libro.findById(req.params.id);
     res.json(libro);
   } catch (error) {
-    res.status(500).json({ error: "Error al encontrar el Libro" });
+    res.status(500).json({ error: "Error al buscar el Libro" });
   }
 }
 
